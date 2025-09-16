@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var cookieCount = 0
     var body: some View {
         TabView {
             ZStack(alignment: .topLeading){
@@ -91,7 +92,28 @@ struct ContentView: View {
                 Image(systemName: "folder.fill")
                 Text("Projects")
             }
-            
+
+            VStack {
+                Spacer()
+                Text("🍪")
+                    .font(.system(size: 120))
+                    .onTapGesture {
+                        cookieCount += 1
+                    }
+                Text("Cookies: \(cookieCount)")
+                    .font(.title2)
+                    .padding(.top, 20)
+                Button("Reset") {
+                    cookieCount = 0
+                }
+                .padding(.top, 10)
+                Spacer()
+            }
+            .tabItem {
+                Image(systemName: "circle.fill")
+                Text("Cookie")
+            }
+
             VStack {
                 Text("Settings Page")
                     .font(.largeTitle)
