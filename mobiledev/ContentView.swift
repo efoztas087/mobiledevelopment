@@ -9,6 +9,8 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var cookieCount = 0
+    @State private var grandmaCount = 0
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
     var body: some View {
         TabView {
             ZStack(alignment: .topLeading){
@@ -93,21 +95,70 @@ struct ContentView: View {
                 Text("Projects")
             }
 
-            VStack {
+            VStack(spacing: 24) {
                 Spacer()
-                Text("🍪")
-                    .font(.system(size: 120))
-                    .onTapGesture {
-                        cookieCount += 1
+                // Cookie Button
+                Button(action: { cookieCount += 1 }) {
+                    Text("🍪")
+                        .font(.system(size: 120))
+                        .padding()
+                        .background(Circle().fill(Color.orange.opacity(0.3)))
+                        .overlay(Circle().stroke(Color.orange, lineWidth: 4))
+                        .shadow(radius: 6)
+                }
+
+                
+                Button(action: {
+                    if cookieCount >= 10 {
+                        cookieCount -= 10
+                        grandmaCount += 1
                     }
+                }) {
+                    HStack {
+                        Text("👵")
+                        Text("Buy Grandma (10 🍪)")
+                    }
+                    .font(.headline)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(RoundedRectangle(cornerRadius: 12).fill(Color.pink.opacity(0.2)))
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.pink, lineWidth: 2))
+                }
+                .disabled(cookieCount < 10)
+                .padding(.horizontal)
+
+                
                 Text("Cookies: \(cookieCount)")
-                    .font(.title2)
-                    .padding(.top, 20)
+                    .font(.title2.bold())
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(RoundedRectangle(cornerRadius: 12).fill(Color.orange.opacity(0.2)))
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.orange, lineWidth: 2))
+                    .padding(.horizontal)
+
+               
+                Text("Grandmas: \(grandmaCount)")
+                    .font(.title3)
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(RoundedRectangle(cornerRadius: 12).fill(Color.pink.opacity(0.2)))
+                    .overlay(RoundedRectangle(cornerRadius: 12).stroke(Color.pink, lineWidth: 2))
+                    .padding(.horizontal)
+
+                
                 Button("Reset") {
                     cookieCount = 0
+                    grandmaCount = 0
                 }
-                .padding(.top, 10)
+                .padding()
+                .frame(maxWidth: .infinity)
+                .background(RoundedRectangle(cornerRadius: 12).fill(Color.red.opacity(0.8)))
+                .foregroundColor(.white)
+                .padding(.horizontal)
                 Spacer()
+            }
+            .onReceive(timer) { _ in
+                cookieCount += grandmaCount
             }
             .tabItem {
                 Image(systemName: "circle.fill")
